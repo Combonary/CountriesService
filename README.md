@@ -22,7 +22,7 @@ Add the library to your `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation(projects.sharedLogic)
+    implementation(projects.countriesService)
 }
 ```
 
@@ -89,7 +89,7 @@ The library uses a DAO-centric architecture that allows for pure logic testing i
 
 To run tests:
 ```bash
-./gradlew :sharedLogic:allTests
+./gradlew :countries-service:allTests
 ```
 
 ### Publishing to GitHub Packages
@@ -101,5 +101,5 @@ The library is configured to automatically publish to GitHub Packages whenever a
 1. Update `gpr.user` and `gpr.key` in `local.properties` with your GitHub username and a Personal Access Token (PAT) with `write:packages` scope.
 2. Run the publish task:
 ```bash
-./gradlew :sharedLogic:publishAllPublicationsToGitHubPackagesRepository
+./gradlew :countries-service:publishAllPublicationsToGitHubPackagesRepository
 ```

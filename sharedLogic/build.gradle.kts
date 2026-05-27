@@ -99,11 +99,10 @@ val localProperties = Properties().apply {
 }
 
 group = "io.github.Combonary"
-version = "1.0.3"
+version = "1.0.4"
 
 publishing {
     publications.withType<MavenPublication> {
-        artifactId = "countries-service"
         pom {
             name.set("CountriesService")
             description.set("A Kotlin Multiplatform library for fetching country data.")

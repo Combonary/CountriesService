@@ -1,4 +1,4 @@
-rootProject.name = "CountriesService"
+rootProject.name = "CountriesServiceProject"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -28,4 +28,5 @@ dependencyResolutionManagement {
     }
 }
 
-include(":sharedLogic")
+include(":countries-service")
+project(":countries-service").projectDir = file("sharedLogic")
