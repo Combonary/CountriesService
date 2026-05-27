@@ -3,6 +3,7 @@
 import com.apollographql.apollo.annotations.ApolloExperimental
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
+import org.gradle.api.publish.maven.MavenPublication
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -97,17 +98,44 @@ val localProperties = Properties().apply {
     }
 }
 
-group = "io.github.combonary"
-version = "1.0.1"
+group = "io.github.Combonary"
+version = "1.0.2"
 
 publishing {
+    publications.withType<MavenPublication> {
+        artifactId = "countries-service"
+        pom {
+            name.set("CountriesService")
+            description.set("A Kotlin Multiplatform library for fetching country data.")
+            url.set("https://github.com/Combonary/CountriesService")
+            licenses {
+                license {
+                    name.set("MIT")
+                    url.set("https://opensource.org/licenses/MIT")
+                }
+            }
+            developers {
+                developer {
+                    id.set("Combonary")
+                    name.set("Combonary")
+                }
+            }
+            scm {
+                connection.set("scm:git:git://github.com/Combonary/CountriesService.git")
+                developerConnection.set("scm:git:ssh://github.com/Combonary/CountriesService.git")
+                url.set("https://github.com/Combonary/CountriesService")
+            }
+        }
+    }
     repositories {
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/Combonary/CountriesService")
             credentials {
-                username = localProperties.getProperty("gpr.user") ?: System.getenv("GPR_USER")
-                password = localProperties.getProperty("gpr.key") ?: System.getenv("GPR_KEY")
+                username = System.getenv("GITHUB_ACTOR")
+                    ?: localProperties.getProperty("gpr.user")
+                password = System.getenv("GITHUB_TOKEN")
+                    ?: localProperties.getProperty("gpr.key")
             }
         }
     }
