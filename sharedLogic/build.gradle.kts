@@ -132,10 +132,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/Combonary/CountriesService")
             credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                    ?: localProperties.getProperty("gpr.user")
-                password = System.getenv("GITHUB_TOKEN")
-                    ?: localProperties.getProperty("gpr.key")
+                username = System.getenv("GITHUB_ACTOR") ?: localProperties.getProperty("gpr.user")
+                password = System.getenv("GITHUB_TOKEN") ?: localProperties.getProperty("gpr.key")
             }
         }
     }
