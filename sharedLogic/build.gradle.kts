@@ -2,6 +2,7 @@
 
 import com.apollographql.apollo.annotations.ApolloExperimental
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -9,6 +10,7 @@ plugins {
     alias(libs.plugins.apollo)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    id("maven-publish")
 }
 
 room {
@@ -85,3 +87,29 @@ apollo {
         }
     }
 }
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.inputStream().use { inputStream ->
+            load(inputStream)
+        }
+    }
+}
+
+group = "com.pamtech.countriesservice"
+version = "1.0.0"
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Combonary/CountriesService")
+            credentials {
+                username = localProperties.getProperty("gpr.user") ?: System.getenv("GPR_USER")
+                password = localProperties.getProperty("gpr.key") ?: System.getenv("GPR_KEY")
+            }
+        }
+    }
+}
+

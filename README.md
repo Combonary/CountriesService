@@ -49,7 +49,6 @@ let repository = countriesApi.repository
 ### Fetching Data
 
 ```kotlin
-import com.pamtech.countriesservice.model.LibraryResult
 
 suspend fun loadCountries() {
     when (val result = repository.getCountries()) {
@@ -91,4 +90,16 @@ The library uses a DAO-centric architecture that allows for pure logic testing i
 To run tests:
 ```bash
 ./gradlew :sharedLogic:allTests
+```
+
+### Publishing to GitHub Packages
+
+#### Automated (GitHub Actions)
+The library is configured to automatically publish to GitHub Packages whenever a new **Release** is published on GitHub.
+
+#### Manual
+1. Update `gpr.user` and `gpr.key` in `local.properties` with your GitHub username and a Personal Access Token (PAT) with `write:packages` scope.
+2. Run the publish task:
+```bash
+./gradlew :sharedLogic:publishAllPublicationsToGitHubPackagesRepository
 ```
