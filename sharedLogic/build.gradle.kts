@@ -97,8 +97,8 @@ val localProperties = Properties().apply {
     }
 }
 
-group = "com.pamtech.countriesservice"
-version = "1.0.0"
+group = "io.github.combonary"
+version = "1.0.1"
 
 publishing {
     repositories {
