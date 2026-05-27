@@ -6,6 +6,7 @@ on:
 
 jobs:
   publish:
+    name: Publish to GitHub Packages
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -20,9 +21,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'gradle'
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
 
       - name: Publish to GitHub Packages
         run: ./gradlew :countries-service:publishAllPublicationsToGitHubPackagesRepository
