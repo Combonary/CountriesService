@@ -18,11 +18,31 @@ A robust Kotlin Multiplatform (KMP) library providing a type-safe, multiplatform
 
 ## Installation
 
-Add the library to your `build.gradle.kts`:
+### 1. Configure Repository
+Add the following to your `settings.gradle.kts` (or root `build.gradle.kts`):
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url = uri("https://maven.pkg.github.com/Combonary/CountriesService")
+            credentials {
+                username = "YOUR_GITHUB_USERNAME"
+                password = "YOUR_GITHUB_TOKEN" // Requires 'read:packages' scope
+            }
+        }
+    }
+}
+```
+
+### 2. Add Dependency
+Add the library to your module's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation(projects.countriesService)
+    implementation("io.github.Combonary:countries-service:1.0.6")
 }
 ```
 
