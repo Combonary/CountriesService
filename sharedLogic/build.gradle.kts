@@ -99,7 +99,7 @@ val localProperties = Properties().apply {
 }
 
 group = "io.github.Combonary"
-version = "1.0.4"
+version = "1.0.5"
 
 publishing {
     publications.withType<MavenPublication> {
