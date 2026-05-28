@@ -16,6 +16,8 @@ class CountriesApi(database: AppDatabase) {
     val repository: CountriesRepository = CountriesRepository(
         apolloClient = apolloClient,
         countryDao = database.countryDao(),
-        continentDao = database.continentDao()
+        continentDao = database.continentDao(),
+        statesDao = database.statesDao()
     )
+
 }

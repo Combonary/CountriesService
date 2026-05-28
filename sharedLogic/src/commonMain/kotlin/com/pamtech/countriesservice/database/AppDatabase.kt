@@ -10,7 +10,9 @@ import androidx.room.RoomDatabaseConstructor
 abstract class AppDatabase : RoomDatabase() {
     abstract fun countryDao(): CountryDao
     abstract fun continentDao(): ContinentDao
+    abstract fun statesDao(): StatesDao
 }
+
 
 // The Room compiler generates the implementation of this class
 expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {

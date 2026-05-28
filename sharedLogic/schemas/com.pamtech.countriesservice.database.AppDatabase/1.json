@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e93feefae6e720e165278eee344006ab",
+    "identityHash": "6da8e6f7591fb5188c9090bb7cd179ff",
     "entities": [
       {
         "tableName": "CountryEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`code` TEXT NOT NULL, `name` TEXT NOT NULL, `emoji` TEXT NOT NULL, `continentName` TEXT NOT NULL, `native` TEXT, `phone` TEXT, `capital` TEXT, `currency` TEXT, PRIMARY KEY(`code`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`code` TEXT NOT NULL, `name` TEXT NOT NULL, `emoji` TEXT NOT NULL, `continentName` TEXT NOT NULL, `continentCode` TEXT NOT NULL, `native` TEXT, `phone` TEXT, `capital` TEXT, `currency` TEXT, PRIMARY KEY(`code`))",
         "fields": [
           {
             "fieldPath": "code",
@@ -29,6 +29,12 @@
           {
             "fieldPath": "continentName",
             "columnName": "continentName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "continentCode",
+            "columnName": "continentCode",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -142,7 +148,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e93feefae6e720e165278eee344006ab')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6da8e6f7591fb5188c9090bb7cd179ff')"
     ]
   }
 }

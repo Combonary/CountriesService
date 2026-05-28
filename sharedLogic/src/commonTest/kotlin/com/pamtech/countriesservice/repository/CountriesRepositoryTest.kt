@@ -6,7 +6,9 @@ import com.apollographql.apollo.testing.QueueTestNetworkTransport
 import com.apollographql.apollo.testing.enqueueTestResponse
 import com.pamtech.countriesservice.database.FakeContinentDao
 import com.pamtech.countriesservice.database.FakeCountryDao
+import com.pamtech.countriesservice.database.FakeStatesDao
 import com.pamtech.countriesservice.graphql.GetContinentsQuery
+import com.pamtech.countriesservice.graphql.GetCountriesByContinentQuery
 import com.pamtech.countriesservice.graphql.GetCountriesQuery
 import com.pamtech.countriesservice.graphql.GetCountryQuery
 import com.pamtech.countriesservice.graphql.GetStatesQuery
@@ -27,11 +29,13 @@ class CountriesRepositoryTest {
 
     private lateinit var countryDao: FakeCountryDao
     private lateinit var continentDao: FakeContinentDao
+    private lateinit var statesDao: FakeStatesDao
 
     @BeforeTest
     fun setup() {
         countryDao = FakeCountryDao()
         continentDao = FakeContinentDao()
+        statesDao = FakeStatesDao()
     }
 
     @OptIn(ApolloExperimental::class)
@@ -40,7 +44,7 @@ class CountriesRepositoryTest {
         val apolloClient = ApolloClient.Builder()
             .networkTransport(QueueTestNetworkTransport())
             .build()
-        val repository = CountriesRepository(apolloClient, countryDao, continentDao)
+        val repository = CountriesRepository(apolloClient, countryDao, continentDao, statesDao)
 
         val query = GetCountriesQuery()
         val testData = GetCountriesQuery.Companion.Data {
@@ -74,7 +78,7 @@ class CountriesRepositoryTest {
         val apolloClient = ApolloClient.Builder()
             .networkTransport(QueueTestNetworkTransport())
             .build()
-        val repository = CountriesRepository(apolloClient, countryDao, continentDao)
+        val repository = CountriesRepository(apolloClient, countryDao, continentDao, statesDao)
 
         val query = GetCountryQuery("AD")
         val testData = GetCountryQuery.Companion.Data {
@@ -117,7 +121,7 @@ class CountriesRepositoryTest {
         val apolloClient = ApolloClient.Builder()
             .networkTransport(QueueTestNetworkTransport())
             .build()
-        val repository = CountriesRepository(apolloClient, countryDao, continentDao)
+        val repository = CountriesRepository(apolloClient, countryDao, continentDao, statesDao)
 
         val query = GetContinentsQuery()
         val testData = GetContinentsQuery.Companion.Data {
@@ -145,7 +149,7 @@ class CountriesRepositoryTest {
         val apolloClient = ApolloClient.Builder()
             .networkTransport(QueueTestNetworkTransport())
             .build()
-        val repository = CountriesRepository(apolloClient, countryDao, continentDao)
+        val repository = CountriesRepository(apolloClient, countryDao, continentDao, statesDao)
 
         val query = GetCountriesQuery()
         val testData = GetCountriesQuery.Companion.Data {
@@ -166,7 +170,7 @@ class CountriesRepositoryTest {
         val apolloClient = ApolloClient.Builder()
             .networkTransport(QueueTestNetworkTransport())
             .build()
-        val repository = CountriesRepository(apolloClient, countryDao, continentDao)
+        val repository = CountriesRepository(apolloClient, countryDao, continentDao, statesDao)
 
         val query = GetStatesQuery("US")
         val testData = GetStatesQuery.Companion.Data {
@@ -194,5 +198,38 @@ class CountriesRepositoryTest {
         assertEquals("California", states[0].name)
         assertEquals("NY", states[1].code)
         assertEquals("New York", states[1].name)
+    }
+
+    @OptIn(ApolloExperimental::class)
+    @Test
+    fun getCountriesByContinentMapping() = runTest {
+        val apolloClient = ApolloClient.Builder()
+            .networkTransport(QueueTestNetworkTransport())
+            .build()
+        val repository = CountriesRepository(apolloClient, countryDao, continentDao, statesDao)
+
+        val query = GetCountriesByContinentQuery(com.apollographql.apollo.api.Optional.present("AF"))
+        val testData = GetCountriesByContinentQuery.Companion.Data {
+            countries = listOf(
+                buildCountry {
+                    code = "NG"
+                    name = "Nigeria"
+                    emoji = "🇳🇬"
+                    continent = buildContinent {
+                        code = "AF"
+                        name = "Africa"
+                    }
+                }
+            )
+        }
+        apolloClient.enqueueTestResponse(query, testData)
+
+        val result = repository.getCountriesByContinent("AF")
+        assertTrue(result is LibraryResult.Success)
+        val countries = result.data
+
+        assertEquals(1, countries.size)
+        assertEquals("NG", countries[0].code)
+        assertEquals("Nigeria", countries[0].name)
     }
 }

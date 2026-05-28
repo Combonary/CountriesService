@@ -3,9 +3,11 @@ package com.pamtech.countriesservice.database
 class FakeCountryDao : CountryDao {
     private val countries = mutableMapOf<String, CountryEntity>()
     private val languages = mutableMapOf<String, MutableList<String>>()
-    private val states = mutableMapOf<String, MutableList<StateEntity>>()
 
     override suspend fun getAllCountries(): List<CountryEntity> = countries.values.toList()
+
+    override suspend fun getCountriesByContinent(continentCode: String): List<CountryEntity> =
+        countries.values.filter { it.continentCode == continentCode }
 
     override suspend fun getCountryByCode(code: String): CountryEntity? = countries[code]
 
@@ -28,6 +30,10 @@ class FakeCountryDao : CountryDao {
     override suspend fun deleteLanguagesForCountry(code: String) {
         languages.remove(code)
     }
+}
+
+class FakeStatesDao : StatesDao {
+    private val states = mutableMapOf<String, MutableList<StateEntity>>()
 
     override suspend fun getStatesForCountry(countryCode: String): List<StateEntity> = states[countryCode] ?: emptyList()
 

@@ -8,11 +8,13 @@ data class CountryEntity(
     val name: String,
     val emoji: String,
     val continentName: String,
+    val continentCode: String,
     val native: String? = null,
     val phone: String? = null,
     val capital: String? = null,
     val currency: String? = null
 )
+
 
 @Entity
 data class ContinentEntity(
@@ -38,6 +40,9 @@ interface CountryDao {
     @Query("SELECT * FROM CountryEntity")
     suspend fun getAllCountries(): List<CountryEntity>
 
+    @Query("SELECT * FROM CountryEntity WHERE continentCode = :continentCode")
+    suspend fun getCountriesByContinent(continentCode: String): List<CountryEntity>
+
     @Query("SELECT * FROM CountryEntity WHERE code = :code")
     suspend fun getCountryByCode(code: String): CountryEntity?
 
@@ -55,7 +60,10 @@ interface CountryDao {
     
     @Query("DELETE FROM CountryLanguageEntity WHERE countryCode = :code")
     suspend fun deleteLanguagesForCountry(code: String)
+}
 
+@Dao
+interface StatesDao {
     @Query("SELECT * FROM StateEntity WHERE countryCode = :countryCode")
     suspend fun getStatesForCountry(countryCode: String): List<StateEntity>
 
