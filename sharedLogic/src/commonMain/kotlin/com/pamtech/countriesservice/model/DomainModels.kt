@@ -32,3 +32,10 @@ data class Continent(
     val code: String,
     val name: String
 )
+
+@OptIn(ExperimentalObjCName::class)
+@ObjCName("State")
+data class State(
+    val code: String?,
+    val name: String
+)

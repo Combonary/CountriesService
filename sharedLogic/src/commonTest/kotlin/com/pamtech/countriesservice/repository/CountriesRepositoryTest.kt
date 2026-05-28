@@ -9,10 +9,12 @@ import com.pamtech.countriesservice.database.FakeCountryDao
 import com.pamtech.countriesservice.graphql.GetContinentsQuery
 import com.pamtech.countriesservice.graphql.GetCountriesQuery
 import com.pamtech.countriesservice.graphql.GetCountryQuery
+import com.pamtech.countriesservice.graphql.GetStatesQuery
 import com.pamtech.countriesservice.graphql.builder.Data
 import com.pamtech.countriesservice.graphql.builder.buildContinent
 import com.pamtech.countriesservice.graphql.builder.buildCountry
 import com.pamtech.countriesservice.graphql.builder.buildLanguage
+import com.pamtech.countriesservice.graphql.builder.buildState
 import com.pamtech.countriesservice.model.LibraryResult
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
@@ -156,5 +158,41 @@ class CountriesRepositoryTest {
         val countries = result.data
 
         assertTrue(countries.isEmpty())
+    }
+
+    @OptIn(ApolloExperimental::class)
+    @Test
+    fun getStatesMapping() = runTest {
+        val apolloClient = ApolloClient.Builder()
+            .networkTransport(QueueTestNetworkTransport())
+            .build()
+        val repository = CountriesRepository(apolloClient, countryDao, continentDao)
+
+        val query = GetStatesQuery("US")
+        val testData = GetStatesQuery.Companion.Data {
+            country = buildCountry {
+                states = listOf(
+                    buildState {
+                        code = "CA"
+                        name = "California"
+                    },
+                    buildState {
+                        code = "NY"
+                        name = "New York"
+                    }
+                )
+            }
+        }
+        apolloClient.enqueueTestResponse(query, testData)
+
+        val result = repository.getStates("US")
+        assertTrue(result is LibraryResult.Success)
+        val states = result.data
+
+        assertEquals(2, states.size)
+        assertEquals("CA", states[0].code)
+        assertEquals("California", states[0].name)
+        assertEquals("NY", states[1].code)
+        assertEquals("New York", states[1].name)
     }
 }

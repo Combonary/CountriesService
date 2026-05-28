@@ -2,14 +2,11 @@ package com.pamtech.countriesservice.repository
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.exception.ApolloException
-import com.pamtech.countriesservice.database.ContinentDao
-import com.pamtech.countriesservice.database.CountryDao
-import com.pamtech.countriesservice.database.CountryEntity
-import com.pamtech.countriesservice.database.ContinentEntity
-import com.pamtech.countriesservice.database.CountryLanguageEntity
+import com.pamtech.countriesservice.database.*
 import com.pamtech.countriesservice.graphql.GetContinentsQuery
 import com.pamtech.countriesservice.graphql.GetCountriesQuery
 import com.pamtech.countriesservice.graphql.GetCountryQuery
+import com.pamtech.countriesservice.graphql.GetStatesQuery
 import com.pamtech.countriesservice.model.*
 import kotlin.experimental.ExperimentalObjCName
 import kotlin.native.ObjCName
@@ -140,6 +137,38 @@ class CountriesRepository(
                         name = it.name
                     )
                 } ?: throw Exception("Empty response")
+            }
+        )
+    }
+
+    suspend fun getStates(countryCode: String): LibraryResult<List<State>> {
+        return safeCall(
+            cacheCall = {
+                countryDao.getStatesForCountry(countryCode).map {
+                    State(
+                        code = it.code,
+                        name = it.name
+                    )
+                }
+            },
+            saveCache = { states ->
+                countryDao.deleteStatesForCountry(countryCode)
+                countryDao.insertStates(states.map {
+                    StateEntity(
+                        countryCode = countryCode,
+                        code = it.code,
+                        name = it.name
+                    )
+                })
+            },
+            networkCall = {
+                val response = apolloClient.query(GetStatesQuery(countryCode)).execute()
+                response.data?.country?.states?.map {
+                    State(
+                        code = it.code,
+                        name = it.name
+                    )
+                } ?: throw Exception("Country or states not found")
             }
         )
     }

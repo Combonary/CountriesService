@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e28ba4845fcf60361ee6d51c7b03a8fe",
+    "identityHash": "e93feefae6e720e165278eee344006ab",
     "entities": [
       {
         "tableName": "CountryEntity",
@@ -108,11 +108,41 @@
             "language"
           ]
         }
+      },
+      {
+        "tableName": "StateEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`countryCode` TEXT NOT NULL, `code` TEXT, `name` TEXT NOT NULL, PRIMARY KEY(`countryCode`, `name`))",
+        "fields": [
+          {
+            "fieldPath": "countryCode",
+            "columnName": "countryCode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "countryCode",
+            "name"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e28ba4845fcf60361ee6d51c7b03a8fe')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e93feefae6e720e165278eee344006ab')"
     ]
   }
 }

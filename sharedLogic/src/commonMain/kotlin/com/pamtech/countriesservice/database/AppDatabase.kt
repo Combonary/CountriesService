@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.ConstructedBy
 import androidx.room.RoomDatabaseConstructor
 
-@Database(entities = [CountryEntity::class, ContinentEntity::class, CountryLanguageEntity::class], version = 1)
+@Database(entities = [CountryEntity::class, ContinentEntity::class, CountryLanguageEntity::class, StateEntity::class], version = 1)
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun countryDao(): CountryDao

@@ -26,6 +26,13 @@ data class CountryLanguageEntity(
     val language: String
 )
 
+@Entity(primaryKeys = ["countryCode", "name"])
+data class StateEntity(
+    val countryCode: String,
+    val code: String?,
+    val name: String
+)
+
 @Dao
 interface CountryDao {
     @Query("SELECT * FROM CountryEntity")
@@ -48,6 +55,15 @@ interface CountryDao {
     
     @Query("DELETE FROM CountryLanguageEntity WHERE countryCode = :code")
     suspend fun deleteLanguagesForCountry(code: String)
+
+    @Query("SELECT * FROM StateEntity WHERE countryCode = :countryCode")
+    suspend fun getStatesForCountry(countryCode: String): List<StateEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertStates(states: List<StateEntity>)
+
+    @Query("DELETE FROM StateEntity WHERE countryCode = :countryCode")
+    suspend fun deleteStatesForCountry(countryCode: String)
 }
 
 @Dao
